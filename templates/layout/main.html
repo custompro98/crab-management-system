@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <!-- Boilerplate -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Dependencies -->
+
+    <!-- SEO -->
+    <title>Crab Management System {% if page.title %} - {{ page.title }}{% endif %}</title>
+    <meta name="description" content="A Content Management System (CMS) written in Rust and powered by gRPC">
+    <meta name="author" content="custompro98">
+  </head>
+  <body>
+    <header>{%include "layout/header.html" %}</header>
+    <main>
+      {% block body %}
+      {% endblock %}
+    </main>
+    <footer>{%include "layout/footer.html" %}</footer>
+  </body>
+</html>
