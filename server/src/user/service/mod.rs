@@ -1,3 +1,4 @@
+use sqlx::PgPool;
 use tonic::{Request, Response, Status};
 
 use super::pb::{CreateUserRequest, User, GetUserRequest, UpdateUserRequest, DeleteUserRequest};
@@ -8,12 +9,15 @@ mod delete;
 mod get;
 mod update;
 
-#[derive(Default)]
-pub struct Service {}
+pub struct Service {
+    repository: super::repository::Repository,
+}
 
 impl Service {
-    pub fn new() -> Service {
-        Service::default()
+    pub fn new(pool: PgPool) -> Service {
+        Service {
+            repository: super::repository::Repository::new(pool)
+        }
     }
 }
 
@@ -30,7 +34,7 @@ impl UserService for Service {
         &self,
         request: Request<GetUserRequest>,
     ) -> Result<Response<User>, Status> {
-        self.on_get_user(request)
+        self.on_get_user(request).await
     }
 
     async fn update_user(
