@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package collection;
+
+import "document.proto";
+import "google/protobuf/empty.proto";
+
+message Collection {
+  int32 id = 1;
+  int32 account_id = 2;
+  string name = 3;
+
+  repeated document.Document documents = 4;
+
+  string created_at = 50;
+
+  oneof optional_updated_at {
+    string updated_at = 51;
+  }
+
+  oneof optional_deleted_at {
+    string deleted_at = 52;
+  }
+}
+
+service CollectionService {
+  rpc CreateCollection (CreateCollectionRequest) returns (Collection);
+  rpc GetCollection (GetCollectionRequest) returns (Collection);
+  rpc UpdateCollection (UpdateCollectionRequest) returns (Collection);
+  rpc DeleteCollection (DeleteCollectionRequest)
+    returns (google.protobuf.Empty);
+}
+
+message CreateCollectionRequest {
+  Collection collection = 1;
+}
+
+message GetCollectionRequest {
+  int32 id = 1;
+}
+
+message UpdateCollectionRequest {
+  Collection collection = 1;
+}
+
+message DeleteCollectionRequest {
+  int32 id = 1;
+}

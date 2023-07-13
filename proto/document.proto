@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package document;
+
+import "field.proto";
+import "fieldgroup.proto";
+import "google/protobuf/empty.proto";
+
+message Document {
+  int32 id = 1;
+  int32 account_id = 2;
+  string name = 3;
+
+  int32 field_group_id = 4;
+  fieldgroup.FieldGroup field_group = 5;
+
+  repeated field.Field document_fields = 6;
+
+  string created_at = 50;
+
+  oneof optional_updated_at {
+    string updated_at = 51;
+  }
+
+  oneof optional_deleted_at {
+    string deleted_at = 52;
+  }
+}
+
+service DocumentService {
+  rpc CreateDocument (CreateDocumentRequest) returns (Document);
+  rpc GetDocument (GetDocumentRequest) returns (Document);
+  rpc UpdateDocument (UpdateDocumentRequest) returns (Document);
+  rpc DeleteDocument (DeleteDocumentRequest) returns (google.protobuf.Empty);
+}
+
+message CreateDocumentRequest {
+  Document document = 1;
+}
+
+message GetDocumentRequest {
+  int32 id = 1;
+}
+
+message UpdateDocumentRequest {
+  Document document = 1;
+}
+
+message DeleteDocumentRequest {
+  int32 id = 1;
+}

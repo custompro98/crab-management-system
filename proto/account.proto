@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package account;
+
+import "google/protobuf/empty.proto";
+import "user.proto";
+
+message Account {
+  int32 id = 1;
+  int32 owner_id = 2;
+  string slug = 3;
+  string name = 4;
+
+  string created_at = 50;
+
+  oneof optional_updated_at {
+    string updated_at = 51;
+  }
+
+  oneof optional_deleted_at {
+    string deleted_at = 52;
+  }
+}
+
+service AccountService {
+  rpc CreateAccount (CreateAccountRequest) returns (Account);
+  rpc GetAccount (GetAccountRequest) returns (Account);
+  rpc UpdateAccount (UpdateAccountRequest) returns (Account);
+  rpc DeleteAccount (DeleteAccountRequest) returns (google.protobuf.Empty);
+}
+
+message CreateAccountRequest {
+  Account account = 1;
+}
+
+message GetAccountRequest {
+  int32 id = 1;
+}
+
+message UpdateAccountRequest {
+  Account account = 1;
+}
+
+message DeleteAccountRequest {
+  int32 id = 1;
+}

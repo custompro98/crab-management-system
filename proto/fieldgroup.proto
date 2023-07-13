@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package fieldgroup;
+
+import "field.proto";
+import "google/protobuf/empty.proto";
+
+message FieldGroup {
+  int32 id = 1;
+  int32 account_id = 2;
+  string name = 3;
+
+  repeated field.Field fields = 4;
+
+  string created_at = 50;
+
+  oneof optional_updated_at {
+    string updated_at = 51;
+  }
+
+  oneof optional_deleted_at {
+    string deleted_at = 52;
+  }
+}
+
+service FieldGroupService {
+  rpc CreateFieldGroup (CreateFieldGroupRequest) returns (FieldGroup);
+  rpc GetFieldGroup (GetFieldGroupRequest) returns (FieldGroup);
+  rpc UpdateFieldGroup (UpdateFieldGroupRequest) returns (FieldGroup);
+  rpc DeleteFieldGroup (DeleteFieldGroupRequest)
+    returns (google.protobuf.Empty);
+}
+
+message CreateFieldGroupRequest {
+  FieldGroup field_group = 1;
+}
+
+message GetFieldGroupRequest {
+  int32 id = 1;
+}
+
+message UpdateFieldGroupRequest {
+  FieldGroup field_group = 1;
+}
+
+message DeleteFieldGroupRequest {
+  int32 id = 1;
+}

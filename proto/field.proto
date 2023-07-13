@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package field;
+
+import "google/protobuf/empty.proto";
+
+message Field {
+  enum Type {
+    TYPE_UNSPECIFIED = 0;
+    TYPE_TEXT = 1;
+  }
+
+  int32 id = 1;
+  int32 account_id = 2;
+  string name = 3;
+  string value = 4;
+  Type type = 5;
+
+  string created_at = 50;
+
+  oneof optional_updated_at {
+    string updated_at = 51;
+  }
+
+  oneof optional_deleted_at {
+    string deleted_at = 52;
+  }
+}
+
+service FieldService {
+  rpc CreateField (CreateFieldRequest) returns (Field);
+  rpc GetField (GetFieldRequest) returns (Field);
+  rpc UpdateField (UpdateFieldRequest) returns (Field);
+  rpc DeleteField (DeleteFieldRequest) returns (google.protobuf.Empty);
+}
+
+message CreateFieldRequest {
+  Field field = 1;
+}
+
+message GetFieldRequest {
+  int32 id = 1;
+}
+
+message UpdateFieldRequest {
+  Field field = 1;
+}
+
+message DeleteFieldRequest {
+  int32 id = 1;
+}

@@ -1,57 +1,14 @@
-use std::net::SocketAddr;
-
-use axum::Json;
-use axum::http::StatusCode;
-use axum::response::Html;
-use axum::routing::get;
-use minijinja::{Environment, path_loader, context};
-use once_cell::sync::Lazy;
-use serde::Serialize;
-
-static ENV: Lazy<Environment<'static>> = Lazy::new(|| {
-    let mut env = Environment::new();
-    env.set_loader(path_loader("templates"));
-    env
-});
-
-#[derive(Serialize)]
-pub struct Page {
-    title: &'static str,
-}
+use dotenv::dotenv;
 
 #[tokio::main]
 async fn main() {
-    let app = axum::Router::new()
-        .route("/healthz", get(healthz))
-        .route("/", get(root))
-        .route("/posts", get(posts_index));
+    dotenv().ok();
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    // let database_url = std::env::var("DATABASE_URL").expect("Please set the DATABASE_URL env var");
 
-    axum::Server::bind(&addr)
-        .serve(app.into_make_service())
+    /* let pool = PgPoolOptions::new()
+        .max_connections(50)
+        .connect(&database_url)
         .await
-        .unwrap();
-}
-
-async fn healthz() -> (StatusCode, Json<&'static str>) {
-    (StatusCode::OK, Json("ok"))
-}
-
-async fn root() -> (StatusCode, Html<String>) {
-    let tmpl = ENV.get_template("index.html").unwrap();
-
-    let page = Page { title: "Home" };
-    let ctx = context!(page);
-
-    (StatusCode::OK, Html(tmpl.render(ctx).unwrap()))
-}
-
-async fn posts_index() -> (StatusCode, Html<String>) {
-    let tmpl = ENV.get_template("posts.html").unwrap();
-
-    let page = Page { title: "Posts" };
-    let ctx = context!(page);
-
-    (StatusCode::OK, Html(tmpl.render(ctx).unwrap()))
+        .expect("Could not connect to the database"); */
 }
