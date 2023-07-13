@@ -1,7 +1,7 @@
 use tonic::{Request, Response, Status};
 
+use super::super::pb::DeleteUserRequest;
 use super::Service;
-use super::pb::DeleteUserRequest;
 
 impl Service {
     pub fn on_delete_user(

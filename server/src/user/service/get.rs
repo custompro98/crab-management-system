@@ -5,14 +5,11 @@ use tonic::{Request, Response, Status};
 
 use crate::user::pb::user::OptionalName;
 
+use super::super::pb::{GetUserRequest, User};
 use super::Service;
-use super::pb::{UpdateUserRequest, User};
 
 impl Service {
-    pub fn on_update_user(
-        &self,
-        request: Request<UpdateUserRequest>,
-    ) -> Result<Response<User>, Status> {
+    pub fn on_get_user(&self, request: Request<GetUserRequest>) -> Result<Response<User>, Status> {
         println!("Got a request from {:?}", request.remote_addr());
 
         let now = SystemTime::now();

@@ -5,13 +5,13 @@ use tonic::{Request, Response, Status};
 
 use crate::user::pb::user::OptionalName;
 
+use super::super::pb::{UpdateUserRequest, User};
 use super::Service;
-use super::pb::{CreateUserRequest, User};
 
 impl Service {
-    pub fn on_create_user(
+    pub fn on_update_user(
         &self,
-        request: Request<CreateUserRequest>,
+        request: Request<UpdateUserRequest>,
     ) -> Result<Response<User>, Status> {
         println!("Got a request from {:?}", request.remote_addr());
 
