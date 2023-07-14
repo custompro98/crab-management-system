@@ -5,8 +5,6 @@ use super::Service;
 
 impl Service {
     pub async fn on_get_user(&self, request: Request<GetUserRequest>) -> Result<Response<User>, Status> {
-        println!("Got a request from {:?}", request.remote_addr());
-
         let user = self.repository.get(request.get_ref().id).await;
 
         match user {

@@ -2,6 +2,7 @@ use sqlx::PgPool;
 
 use super::pb::User;
 
+mod create;
 mod get;
 
 pub struct Repository {
@@ -11,6 +12,10 @@ pub struct Repository {
 impl Repository {
     pub fn new(pool: PgPool) -> Repository {
         Repository { pool }
+    }
+
+    pub async fn create(&self, user: &User) -> Result<User, Box<dyn std::error::Error>> {
+        Ok(self.on_create_user(user).await?)
     }
 
     pub async fn get(&self, id: i32) -> Result<User, Box<dyn std::error::Error>> {

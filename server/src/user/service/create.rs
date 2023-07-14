@@ -1,34 +1,23 @@
-use std::time::SystemTime;
-
-use chrono::{DateTime, Utc};
 use tonic::{Request, Response, Status};
-
-use crate::user::pb::user::OptionalName;
 
 use super::super::pb::{CreateUserRequest, User};
 use super::Service;
 
 impl Service {
-    pub fn on_create_user(
+    pub async fn on_create_user(
         &self,
         request: Request<CreateUserRequest>,
     ) -> Result<Response<User>, Status> {
-        println!("Got a request from {:?}", request.remote_addr());
+        match &request.get_ref().user {
+            None => Err(Status::invalid_argument("User must be provided")),
+            Some(user) => {
+                let user = self.repository.create(user).await;
 
-        let now = SystemTime::now();
-        let now: DateTime<Utc> = now.into();
-        let now = now.to_rfc3339();
-
-        let reply = User {
-            id: 1,
-            email: "mitchjoa@gmail.com".to_owned(),
-            username: "custompro98".to_owned(),
-            created_at: now,
-            optional_name: Some(OptionalName::Name("Mitch".to_owned())),
-            optional_updated_at: None,
-            optional_deleted_at: None,
-        };
-
-        Ok(Response::new(reply))
+                match user {
+                    Ok(user) => Ok(Response::new(user)),
+                    Err(_) => Err(Status::internal("An internal error occurred")),
+                }
+            }
+        }
     }
 }

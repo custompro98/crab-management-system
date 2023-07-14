@@ -5,9 +5,9 @@ use super::pb::{CreateUserRequest, User, GetUserRequest, UpdateUserRequest, Dele
 use super::pb::user_service_server::UserService;
 
 mod create;
-mod delete;
 mod get;
 mod update;
+mod delete;
 
 pub struct Service {
     repository: super::repository::Repository,
@@ -27,7 +27,7 @@ impl UserService for Service {
         &self,
         request: Request<CreateUserRequest>,
     ) -> Result<Response<User>, Status> {
-        self.on_create_user(request)
+        self.on_create_user(request).await
     }
 
     async fn get_user(
