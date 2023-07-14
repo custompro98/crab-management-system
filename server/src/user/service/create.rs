@@ -8,16 +8,15 @@ impl Service {
         &self,
         request: Request<CreateUserRequest>,
     ) -> Result<Response<User>, Status> {
-        match &request.get_ref().user {
-            None => Err(Status::invalid_argument("User must be provided")),
-            Some(user) => {
-                let user = self.repository.create(user).await;
+        if let None = &request.get_ref().user {
+            return Err(Status::invalid_argument("User must be provided"));
+        }
 
-                match user {
-                    Ok(user) => Ok(Response::new(user)),
-                    Err(_) => Err(Status::internal("An internal error occurred")),
-                }
-            }
+        let user = self.repository.create(request.get_ref().user.to_owned().unwrap()).await;
+
+        match user {
+            Ok(user) => Ok(Response::new(user)),
+            Err(_) => Err(Status::internal("An internal error occurred")),
         }
     }
 }

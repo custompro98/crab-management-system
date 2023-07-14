@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 
+use self::pb::user::{OptionalDeletedAt, OptionalName, OptionalUpdatedAt};
 use self::pb::User;
-use self::pb::user::{OptionalName, OptionalUpdatedAt, OptionalDeletedAt};
 
 pub mod pb {
     tonic::include_proto!("user");
@@ -40,7 +40,34 @@ impl UserRecord {
             optional_deleted_at: match self.deleted_at {
                 Some(timestamp) => Some(OptionalDeletedAt::DeletedAt(timestamp.to_string())),
                 None => None,
-            }
+            },
+        }
+    }
+
+    pub fn from_proto(proto: User) -> UserRecord {
+        UserRecord {
+            id: proto.id,
+            email: proto.email,
+            username: proto.username,
+            name: match proto.optional_name {
+                Some(OptionalName::Name(name)) => Some(name),
+                None => None,
+            },
+            created_at: DateTime::parse_from_rfc3339(&proto.created_at)
+                .unwrap()
+                .into(),
+            updated_at: match proto.optional_updated_at {
+                Some(OptionalUpdatedAt::UpdatedAt(timestamp)) => {
+                    Some(DateTime::parse_from_rfc3339(&timestamp).unwrap().into())
+                }
+                None => None,
+            },
+            deleted_at: match proto.optional_deleted_at {
+                Some(OptionalDeletedAt::DeletedAt(timestamp)) => {
+                    Some(DateTime::parse_from_rfc3339(&timestamp).unwrap().into())
+                }
+                None => None,
+            },
         }
     }
 }

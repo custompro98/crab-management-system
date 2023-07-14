@@ -14,7 +14,7 @@ impl Repository {
         Repository { pool }
     }
 
-    pub async fn create(&self, user: &User) -> Result<User, Box<dyn std::error::Error>> {
+    pub async fn create(&self, user: User) -> Result<User, Box<dyn std::error::Error>> {
         Ok(self.on_create_user(user).await?)
     }
 
