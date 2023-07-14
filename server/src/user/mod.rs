@@ -1,4 +1,4 @@
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Utc, ParseError};
 
 use self::pb::user::{OptionalDeletedAt, OptionalName, OptionalUpdatedAt};
 use self::pb::User;
@@ -44,7 +44,7 @@ impl UserRecord {
         }
     }
 
-    pub fn from_proto(proto: User) -> Result<UserRecord, Box<dyn std::error::Error>> {
+    pub fn from_proto(proto: User) -> Result<UserRecord, ParseError> {
         Ok(UserRecord {
             id: proto.id,
             email: proto.email,

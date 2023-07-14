@@ -1,16 +1,26 @@
+use tonic::Status;
+
 use super::Repository;
 
 impl Repository {
-    pub async fn on_delete_user(&self, id: i32) -> Result<(), Box<dyn std::error::Error>> {
-        sqlx::query!(
+    pub async fn on_delete_user(&self, id: i32) -> Result<(), Status> {
+        let rows_updated = sqlx::query!(
             r#"
               UPDATE users
               SET deleted_at = now()
               WHERE id = $1
+                AND deleted_at IS NULL
             "#,
             id
-        ).fetch_one(&self.pool).await?;
+        ).execute(&self.pool).await;
 
-        Result::Ok(())
+        match rows_updated {
+            Ok(rows_updated) => match rows_updated.rows_affected() {
+                0 => Err(Status::not_found("User not found")),
+                _ => Ok(()),
+            },
+            Err(_) => Err(Status::internal("An internal error occurred")),
+
+        }
     }
 }

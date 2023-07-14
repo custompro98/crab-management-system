@@ -4,8 +4,8 @@ use tonic::transport::Server;
 use self::user::pb::user_service_server::UserServiceServer;
 use self::user::service::Service as UserService;
 
-pub mod user;
 mod db;
+mod user;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

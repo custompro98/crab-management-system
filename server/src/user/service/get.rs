@@ -1,4 +1,4 @@
-use tonic::{Request, Response, Status};
+use tonic::{Request, Response, Status, Code};
 
 use super::super::pb::{GetUserRequest, User};
 use super::Service;
@@ -9,7 +9,15 @@ impl Service {
 
         match user {
             Ok(user) => Ok(Response::new(user)),
-            Err(_) => Err(Status::internal("An internal error occurred")),
+            Err(status) => match &status.code() {
+                Code::NotFound => Err(status),
+                Code::InvalidArgument => Err(status),
+                Code::AlreadyExists => Err(status),
+                Code::FailedPrecondition => Err(status),
+                Code::PermissionDenied => Err(status),
+                Code::Unauthenticated => Err(status),
+                _ => Err(Status::internal("An internal error occurred")),
+            },
         }
     }
 }
