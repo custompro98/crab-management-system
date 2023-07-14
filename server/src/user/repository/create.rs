@@ -1,4 +1,5 @@
 use crate::user::UserRecord;
+use crate::user::pb::user::OptionalName;
 
 use super::super::pb::User;
 
@@ -6,8 +7,8 @@ use super::Repository;
 
 impl Repository {
     pub async fn on_create_user(&self, user: &User) -> Result<User, Box<dyn std::error::Error>> {
-        let name = match user.optional_name {
-            Some(_) => Some("mitch"),
+        let name = match &user.optional_name {
+            Some(OptionalName::Name(name)) => Some(name.clone()),
             None => None,
         };
 
