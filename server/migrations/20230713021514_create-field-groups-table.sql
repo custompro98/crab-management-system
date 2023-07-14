@@ -3,9 +3,9 @@ CREATE TABLE field_groups (
   account_id INT NOT NULL,
   name TEXT NOT NULL,
 
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP,
-  deleted_at TIMESTAMP,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMPTZ,
+  deleted_at TIMESTAMPTZ,
 
   FOREIGN KEY(account_id)
     REFERENCES accounts(id)

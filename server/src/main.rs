@@ -14,12 +14,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let pool = db::establish_connection().await?;
     let addr = "127.0.0.1:50000".parse().unwrap();
 
-    let user_service = UserServiceServer::new(UserService::new(pool));
-
     Server::builder()
         // GrpcWeb is over http1 so we must enable it.
         .accept_http1(true)
-        .add_service(tonic_web::enable(user_service))
+        .add_service(tonic_web::enable(UserServiceServer::new(UserService::new(pool))))
         .serve(addr)
         .await?;
 

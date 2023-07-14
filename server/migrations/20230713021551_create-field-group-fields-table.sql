@@ -3,9 +3,9 @@ CREATE TABLE field_group_fields (
   field_group_id INT NOT NULL,
   field_id INT NOT NULL,
 
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP,
-  deleted_at TIMESTAMP,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMPTZ,
+  deleted_at TIMESTAMPTZ,
 
   FOREIGN KEY(field_group_id)
     REFERENCES field_groups(id)

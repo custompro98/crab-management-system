@@ -51,4 +51,3 @@ impl UserService for Service {
         self.on_delete_user(request)
     }
 }
-

@@ -4,9 +4,9 @@ CREATE TABLE document_fields (
   field_id INT NOT NULL,
   value TEXT NULL,
 
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP,
-  deleted_at TIMESTAMP,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMPTZ,
+  deleted_at TIMESTAMPTZ,
 
   FOREIGN KEY(document_id)
     REFERENCES documents(id)

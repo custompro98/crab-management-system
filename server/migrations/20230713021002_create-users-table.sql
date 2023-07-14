@@ -4,9 +4,9 @@ CREATE TABLE users (
   username TEXT NOT NULL,
   name TEXT NULL,
 
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP,
-  deleted_at TIMESTAMP
+  created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMPTZ,
+  deleted_at TIMESTAMPTZ
 );
 
 CREATE INDEX users_email ON users (email);

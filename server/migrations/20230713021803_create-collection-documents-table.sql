@@ -3,9 +3,9 @@ CREATE TABLE collection_documents (
   collection_id INT NOT NULL,
   document_id INT NOT NULL,
 
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP,
-  deleted_at TIMESTAMP,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMPTZ,
+  deleted_at TIMESTAMPTZ,
 
   FOREIGN KEY(collection_id)
     REFERENCES collections(id)
