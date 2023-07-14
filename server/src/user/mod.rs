@@ -1,7 +1,12 @@
-use chrono::{DateTime, Utc, ParseError};
+use std::time::SystemTime;
+
+use chrono::{DateTime, Utc};
+use validator::Validate;
 
 use self::pb::user::{OptionalDeletedAt, OptionalName, OptionalUpdatedAt};
 use self::pb::User;
+
+use super::error::ValidationError;
 
 pub mod pb {
     tonic::include_proto!("user");
@@ -10,9 +15,10 @@ pub mod pb {
 mod repository;
 pub mod service;
 
-#[derive(sqlx::FromRow)]
+#[derive(sqlx::FromRow, validator::Validate)]
 struct UserRecord {
     id: i32,
+    #[validate(email)]
     email: String,
     username: String,
     name: Option<String>,
@@ -44,8 +50,14 @@ impl UserRecord {
         }
     }
 
-    pub fn from_proto(proto: User) -> Result<UserRecord, ParseError> {
-        Ok(UserRecord {
+    pub fn from_proto(proto: User) -> Result<UserRecord, ValidationError> {
+        // If the id is 0, we are creating a user for the first time
+        let created_at: DateTime<Utc> = match proto.id {
+            0 => SystemTime::now().into(),
+            _ => DateTime::parse_from_rfc3339(&proto.created_at)?.into(),
+        };
+
+        let record = UserRecord {
             id: proto.id,
             email: proto.email,
             username: proto.username,
@@ -53,7 +65,7 @@ impl UserRecord {
                 Some(OptionalName::Name(name)) => Some(name),
                 None => None,
             },
-            created_at: DateTime::parse_from_rfc3339(&proto.created_at)?.into(),
+            created_at,
             updated_at: match proto.optional_updated_at {
                 Some(OptionalUpdatedAt::UpdatedAt(timestamp)) => {
                     Some(DateTime::parse_from_rfc3339(&timestamp)?.into())
@@ -66,6 +78,11 @@ impl UserRecord {
                 }
                 None => None,
             },
-        })
+        };
+
+        match record.validate() {
+            Ok(_) => Ok(record),
+            Err(e) => Err(e.into()),
+        }
     }
 }
