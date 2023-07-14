@@ -1,34 +1,22 @@
-use std::time::SystemTime;
-
-use chrono::{DateTime, Utc};
 use tonic::{Request, Response, Status};
-
-use crate::user::pb::user::OptionalName;
 
 use super::super::pb::{UpdateUserRequest, User};
 use super::Service;
 
 impl Service {
-    pub fn on_update_user(
+    pub async fn on_update_user(
         &self,
         request: Request<UpdateUserRequest>,
     ) -> Result<Response<User>, Status> {
-        println!("Got a request from {:?}", request.remote_addr());
+        if let None = &request.get_ref().user {
+            return Err(Status::invalid_argument("User must be provided"));
+        }
 
-        let now = SystemTime::now();
-        let now: DateTime<Utc> = now.into();
-        let now = now.to_rfc3339();
+        let user = self.repository.update(request.get_ref().user.to_owned().unwrap()).await;
 
-        let reply = User {
-            id: 1,
-            email: "mitchjoa@gmail.com".to_owned(),
-            username: "custompro98".to_owned(),
-            created_at: now,
-            optional_name: Some(OptionalName::Name("Mitch".to_owned())),
-            optional_updated_at: None,
-            optional_deleted_at: None,
-        };
-
-        Ok(Response::new(reply))
+        match user {
+            Ok(user) => Ok(Response::new(user)),
+            Err(_) => Err(Status::internal("An internal error occurred")),
+        }
     }
 }

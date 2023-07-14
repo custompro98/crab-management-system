@@ -41,7 +41,7 @@ impl UserService for Service {
         &self,
         request: Request<UpdateUserRequest>,
     ) -> Result<Response<User>, Status> {
-        self.on_update_user(request)
+        self.on_update_user(request).await
     }
 
     async fn delete_user(
