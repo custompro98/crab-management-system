@@ -44,8 +44,8 @@ impl UserRecord {
         }
     }
 
-    pub fn from_proto(proto: User) -> UserRecord {
-        UserRecord {
+    pub fn from_proto(proto: User) -> Result<UserRecord, Box<dyn std::error::Error>> {
+        Ok(UserRecord {
             id: proto.id,
             email: proto.email,
             username: proto.username,
@@ -53,21 +53,19 @@ impl UserRecord {
                 Some(OptionalName::Name(name)) => Some(name),
                 None => None,
             },
-            created_at: DateTime::parse_from_rfc3339(&proto.created_at)
-                .unwrap()
-                .into(),
+            created_at: DateTime::parse_from_rfc3339(&proto.created_at)?.into(),
             updated_at: match proto.optional_updated_at {
                 Some(OptionalUpdatedAt::UpdatedAt(timestamp)) => {
-                    Some(DateTime::parse_from_rfc3339(&timestamp).unwrap().into())
+                    Some(DateTime::parse_from_rfc3339(&timestamp)?.into())
                 }
                 None => None,
             },
             deleted_at: match proto.optional_deleted_at {
                 Some(OptionalDeletedAt::DeletedAt(timestamp)) => {
-                    Some(DateTime::parse_from_rfc3339(&timestamp).unwrap().into())
+                    Some(DateTime::parse_from_rfc3339(&timestamp)?.into())
                 }
                 None => None,
             },
-        }
+        })
     }
 }

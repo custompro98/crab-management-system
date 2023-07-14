@@ -6,7 +6,7 @@ use super::Repository;
 
 impl Repository {
     pub async fn on_create_user(&self, user: User) -> Result<User, Box<dyn std::error::Error>> {
-        let input = UserRecord::from_proto(user);
+        let input = UserRecord::from_proto(user)?;
 
         let record = sqlx::query_as!(
             UserRecord,
