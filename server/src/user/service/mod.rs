@@ -48,6 +48,6 @@ impl UserService for Service {
         &self,
         request: Request<DeleteUserRequest>,
     ) -> Result<Response<()>, Status> {
-        self.on_delete_user(request)
+        self.on_delete_user(request).await
     }
 }

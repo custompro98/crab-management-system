@@ -4,6 +4,7 @@ use super::pb::User;
 
 mod create;
 mod get;
+mod delete;
 
 pub struct Repository {
     pool: PgPool,
@@ -20,5 +21,9 @@ impl Repository {
 
     pub async fn get(&self, id: i32) -> Result<User, Box<dyn std::error::Error>> {
         Ok(self.on_get_user(id).await?)
+    }
+
+    pub async fn delete(&self, id: i32) -> Result<(), Box<dyn std::error::Error>> {
+        Ok(self.on_delete_user(id).await?)
     }
 }

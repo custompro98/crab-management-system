@@ -4,12 +4,15 @@ use super::super::pb::DeleteUserRequest;
 use super::Service;
 
 impl Service {
-    pub fn on_delete_user(
+    pub async fn on_delete_user(
         &self,
         request: Request<DeleteUserRequest>,
     ) -> Result<Response<()>, Status> {
-        println!("Got a request from {:?}", request.remote_addr());
+        let success = self.repository.delete(request.get_ref().id).await;
 
-        Ok(Response::new(()))
+        match success {
+            Ok(_) => Ok(Response::new(())),
+            Err(_) => Err(Status::internal("An internal error occurred")),
+        }
     }
 }
