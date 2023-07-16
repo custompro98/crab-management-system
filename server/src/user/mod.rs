@@ -33,27 +33,27 @@ impl UserRecord {
             id: self.id,
             email: self.email,
             username: self.username,
-            created_at: self.created_at.to_string(),
+            created_at: self.created_at.to_rfc3339(),
 
             optional_name: match self.name {
                 Some(name) => Some(OptionalName::Name(name)),
                 None => None,
             },
             optional_updated_at: match self.updated_at {
-                Some(timestamp) => Some(OptionalUpdatedAt::UpdatedAt(timestamp.to_string())),
+                Some(timestamp) => Some(OptionalUpdatedAt::UpdatedAt(timestamp.to_rfc3339())),
                 None => None,
             },
             optional_deleted_at: match self.deleted_at {
-                Some(timestamp) => Some(OptionalDeletedAt::DeletedAt(timestamp.to_string())),
+                Some(timestamp) => Some(OptionalDeletedAt::DeletedAt(timestamp.to_rfc3339())),
                 None => None,
             },
         }
     }
 
     pub fn from_proto(proto: User) -> Result<UserRecord, ValidationError> {
-        // If the id is 0, we are creating a user for the first time
-        let created_at: DateTime<Utc> = match proto.id {
-            0 => SystemTime::now().into(),
+        // If there is no created_at, we're creating the record, otherwise it remains unchanged
+        let created_at: DateTime<Utc> = match proto.created_at.as_str() {
+            "" => SystemTime::now().into(),
             _ => DateTime::parse_from_rfc3339(&proto.created_at)?.into(),
         };
 
