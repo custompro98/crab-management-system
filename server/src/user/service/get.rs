@@ -1,6 +1,6 @@
 use tonic::{Request, Response, Status, Code};
 
-use super::super::pb::{GetUserRequest, User};
+use super::super::super::pb::user::{GetUserRequest, User};
 use super::Service;
 
 impl Service {

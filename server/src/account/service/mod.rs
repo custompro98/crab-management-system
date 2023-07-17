@@ -1,8 +1,8 @@
 use sqlx::PgPool;
 use tonic::{Request, Response, Status};
 
-use super::pb::{CreateAccountRequest, Account, GetAccountRequest, UpdateAccountRequest, DeleteAccountRequest};
-use super::pb::account_service_server::AccountService;
+use super::super::pb::account::{CreateAccountRequest, Account, GetAccountRequest, UpdateAccountRequest, DeleteAccountRequest};
+use super::super::pb::account::account_service_server::AccountService;
 
 mod create;
 mod get;

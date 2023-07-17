@@ -1,5 +1,6 @@
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     tonic_build::configure()
+        .include_file("mod.rs")
         .build_server(true)
         .build_client(true)
         .compile(

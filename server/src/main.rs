@@ -1,10 +1,10 @@
 use dotenv::dotenv;
 use tonic::transport::Server;
 
-use self::account::pb::account_service_server::AccountServiceServer;
 use self::account::service::Service as AccountService;
-use self::user::pb::user_service_server::UserServiceServer;
+use self::pb::account::account_service_server::AccountServiceServer;
 use self::user::service::Service as UserService;
+use self::pb::user::user_service_server::UserServiceServer;
 
 // Utility modules
 mod db;
@@ -13,6 +13,10 @@ mod error;
 // Domain modules
 mod account;
 mod user;
+
+pub mod pb {
+    tonic::include_proto!("mod");
+}
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

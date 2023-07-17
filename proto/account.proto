@@ -11,6 +11,8 @@ message Account {
   string slug = 3;
   string name = 4;
 
+  user.User owner = 5;
+
   string created_at = 50;
 
   oneof optional_updated_at {

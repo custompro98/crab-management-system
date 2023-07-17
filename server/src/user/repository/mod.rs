@@ -1,7 +1,7 @@
 use sqlx::PgPool;
 use tonic::Status;
 
-use super::pb::User;
+use super::super::pb::user::User;
 
 mod create;
 mod get;

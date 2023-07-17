@@ -2,14 +2,11 @@ use std::time::SystemTime;
 
 use chrono::{DateTime, Utc};
 
-use self::pb::account::{OptionalDeletedAt, OptionalUpdatedAt};
-use self::pb::Account;
+use super::pb::account::account::{OptionalDeletedAt, OptionalUpdatedAt};
+use super::pb::account::Account;
+use super::pb::user::User;
 
 use super::error::ValidationError;
-
-pub mod pb {
-    tonic::include_proto!("account");
-}
 
 mod repository;
 pub mod service;
@@ -33,6 +30,7 @@ impl AccountRecord {
             slug: self.slug,
             name: self.name,
 
+            owner: None::<User>,
             created_at: self.created_at.to_rfc3339(),
 
             optional_updated_at: match self.updated_at {

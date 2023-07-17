@@ -3,14 +3,10 @@ use std::time::SystemTime;
 use chrono::{DateTime, Utc};
 use validator::Validate;
 
-use self::pb::user::{OptionalDeletedAt, OptionalName, OptionalUpdatedAt};
-use self::pb::User;
+use super::pb::user::user::{OptionalDeletedAt, OptionalName, OptionalUpdatedAt};
+use super::pb::user::User;
 
 use super::error::ValidationError;
-
-pub mod pb {
-    tonic::include_proto!("user");
-}
 
 mod repository;
 pub mod service;

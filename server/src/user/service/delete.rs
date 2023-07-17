@@ -1,6 +1,6 @@
 use tonic::{Request, Response, Status, Code};
 
-use super::super::pb::DeleteUserRequest;
+use super::super::super::pb::user::DeleteUserRequest;
 use super::Service;
 
 impl Service {

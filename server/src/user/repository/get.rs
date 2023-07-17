@@ -2,7 +2,7 @@ use tonic::Status;
 
 use crate::user::UserRecord;
 
-use super::super::pb::User;
+use super::super::super::pb::user::User;
 
 use super::Repository;
 

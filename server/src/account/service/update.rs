@@ -1,6 +1,6 @@
 use tonic::{Request, Response, Status, Code};
 
-use super::super::pb::{UpdateAccountRequest, Account};
+use super::super::super::pb::account::{UpdateAccountRequest, Account};
 use super::Service;
 
 impl Service {
