@@ -11,12 +11,14 @@ mod delete;
 
 pub struct Service {
     repository: super::repository::Repository,
+    users: super::super::user::repository::Repository,
 }
 
 impl Service {
     pub fn new(pool: PgPool) -> Service {
         Service {
-            repository: super::repository::Repository::new(pool)
+            repository: super::repository::Repository::new(pool.clone()),
+            users: super::super::user::repository::Repository::new(pool.clone()),
         }
     }
 }
@@ -27,21 +29,36 @@ impl AccountService for Service {
         &self,
         request: Request<CreateAccountRequest>,
     ) -> Result<Response<Account>, Status> {
-        self.on_create_account(request).await
+        let mut account = self.on_create_account(request).await?;
+        let user = self.users.get(account.get_ref().owner_id).await?;
+
+        account.get_mut().owner = Some(user);
+
+        Ok(account)
     }
 
     async fn get_account(
         &self,
         request: Request<GetAccountRequest>,
     ) -> Result<Response<Account>, Status> {
-        self.on_get_account(request).await
+        let mut account = self.on_get_account(request).await?;
+        let user = self.users.get(account.get_ref().owner_id).await?;
+
+        account.get_mut().owner = Some(user);
+
+        Ok(account)
     }
 
     async fn update_account(
         &self,
         request: Request<UpdateAccountRequest>,
     ) -> Result<Response<Account>, Status> {
-        self.on_update_account(request).await
+        let mut account = self.on_update_account(request).await?;
+        let user = self.users.get(account.get_ref().owner_id).await?;
+
+        account.get_mut().owner = Some(user);
+
+        Ok(account)
     }
 
     async fn delete_account(
