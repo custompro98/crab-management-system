@@ -1000,6 +1000,7 @@ dependencies = [
  "chrono",
  "dotenv",
  "prost",
+ "serde",
  "sqlx",
  "tokio",
  "tonic",

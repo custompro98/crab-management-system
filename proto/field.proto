@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package field;
 
+import "account.proto";
 import "google/protobuf/empty.proto";
 
 message Field {
@@ -13,8 +14,12 @@ message Field {
   int32 id = 1;
   int32 account_id = 2;
   string name = 3;
-  string value = 4;
+  oneof optional_value {
+    string value = 4;
+  }
   Type type = 5;
+
+  account.Account account = 6;
 
   string created_at = 50;
 

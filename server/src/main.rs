@@ -3,6 +3,8 @@ use tonic::transport::Server;
 
 use self::account::service::Service as AccountService;
 use self::pb::account::account_service_server::AccountServiceServer;
+use self::field::service::Service as FieldService;
+use self::pb::field::field_service_server::FieldServiceServer;
 use self::user::service::Service as UserService;
 use self::pb::user::user_service_server::UserServiceServer;
 
@@ -12,6 +14,7 @@ mod error;
 
 // Domain modules
 mod account;
+mod field;
 mod user;
 
 pub mod pb {
@@ -28,8 +31,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Server::builder()
         // GrpcWeb is over http1 so we must enable it.
         .accept_http1(true)
-        .add_service(tonic_web::enable(UserServiceServer::new(UserService::new(pool.clone()))))
         .add_service(tonic_web::enable(AccountServiceServer::new(AccountService::new(pool.clone()))))
+        .add_service(tonic_web::enable(FieldServiceServer::new(FieldService::new(pool.clone()))))
+        .add_service(tonic_web::enable(UserServiceServer::new(UserService::new(pool.clone()))))
         .serve(addr)
         .await?;
 
