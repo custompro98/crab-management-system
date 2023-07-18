@@ -11,12 +11,14 @@ mod delete;
 
 pub struct Service {
     repository: super::repository::Repository,
+    accounts: super::super::account::repository::Repository,
 }
 
 impl Service {
     pub fn new(pool: PgPool) -> Service {
         Service {
-            repository: super::repository::Repository::new(pool)
+            repository: super::repository::Repository::new(pool.clone()),
+            accounts: super::super::account::repository::Repository::new(pool.clone())
         }
     }
 }

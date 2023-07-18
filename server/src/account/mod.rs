@@ -8,7 +8,7 @@ use super::pb::user::User;
 
 use super::error::ValidationError;
 
-mod repository;
+pub mod repository;
 pub mod service;
 
 #[derive(sqlx::FromRow, validator::Validate)]
