@@ -4,21 +4,14 @@ use tonic::{Request, Response, Status};
 use super::super::pb::field::{CreateFieldRequest, Field, GetFieldRequest, UpdateFieldRequest, DeleteFieldRequest};
 use super::super::pb::field::field_service_server::FieldService;
 
-mod create;
-mod get;
-mod update;
-mod delete;
-
 pub struct Handler {
-    repository: super::repository::Repository,
-    accounts: super::super::account::repository::Repository,
+    service: super::service::Service,
 }
 
 impl Handler {
     pub fn new(pool: PgPool) -> Handler {
         Handler {
-            repository: super::repository::Repository::new(pool.clone()),
-            accounts: super::super::account::repository::Repository::new(pool.clone())
+            service: super::service::Service::new(pool.clone()),
         }
     }
 }
@@ -29,27 +22,27 @@ impl FieldService for Handler {
         &self,
         request: Request<CreateFieldRequest>,
     ) -> Result<Response<Field>, Status> {
-        self.on_create_field(request).await
+        self.service.create(request.get_ref().field.to_owned().expect("Field must be defined")).await
     }
 
     async fn get_field(
         &self,
         request: Request<GetFieldRequest>,
     ) -> Result<Response<Field>, Status> {
-        self.on_get_field(request).await
+        self.service.get(request.get_ref().id).await
     }
 
     async fn update_field(
         &self,
         request: Request<UpdateFieldRequest>,
     ) -> Result<Response<Field>, Status> {
-        self.on_update_field(request).await
+        self.service.update(request.get_ref().field.to_owned().expect("Field must be defined")).await
     }
 
     async fn delete_field(
         &self,
         request: Request<DeleteFieldRequest>,
     ) -> Result<Response<()>, Status> {
-        self.on_delete_field(request).await
+        self.service.delete(request.get_ref().id).await
     }
 }

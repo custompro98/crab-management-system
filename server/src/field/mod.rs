@@ -11,7 +11,8 @@ use super::pb::field::Field;
 use super::error::ValidationError;
 
 pub mod handler;
-pub mod repository;
+mod repository;
+pub mod service;
 
 #[derive(serde::Serialize, Default)]
 enum FieldType {

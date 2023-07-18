@@ -1,11 +1,11 @@
-use tonic::{Request, Response, Status, Code};
+use tonic::{Response, Status, Code};
 
-use super::super::super::pb::field::{GetFieldRequest, Field};
-use super::Handler;
+use super::super::super::pb::field::Field;
+use super::Service;
 
-impl Handler {
-    pub async fn on_get_field(&self, request: Request<GetFieldRequest>) -> Result<Response<Field>, Status> {
-        let field = self.repository.get(request.get_ref().id).await;
+impl Service {
+    pub async fn get(&self, id: i32) -> Result<Response<Field>, Status> {
+        let field = self.repository.get(id).await;
 
         if let Err(status) = field {
             return match &status.code() {
@@ -20,8 +20,8 @@ impl Handler {
         }
 
         let mut field = field.unwrap();
-        let account = self.accounts.get(field.account_id).await?;
-        field.account = Some(account);
+        let account = self.account_service.get(field.account_id).await?;
+        field.account = Some(account.get_ref().to_owned());
 
         Ok(Response::new(field))
     }

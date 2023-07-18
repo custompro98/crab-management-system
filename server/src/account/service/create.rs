@@ -1,18 +1,14 @@
-use tonic::{Request, Response, Status, Code};
+use tonic::{Response, Status, Code};
 
-use super::super::super::pb::account::{CreateAccountRequest, Account};
-use super::Handler;
+use super::super::super::pb::account::Account;
+use super::Service;
 
-impl Handler {
-    pub async fn on_create_account(
+impl Service {
+    pub async fn create(
         &self,
-        request: Request<CreateAccountRequest>,
+        account: Account,
     ) -> Result<Response<Account>, Status> {
-        if let None = &request.get_ref().account {
-            return Err(Status::invalid_argument("Account must be provided"));
-        }
-
-        let account = self.repository.create(request.get_ref().account.to_owned().unwrap()).await;
+        let account = self.repository.create(account).await;
 
         if let Err(status) = account {
             return match &status.code() {
@@ -27,8 +23,8 @@ impl Handler {
         }
 
         let mut account = account.unwrap();
-        let user = self.users.get(account.owner_id).await?;
-        account.owner = Some(user);
+        let user = self.user_service.get(account.owner_id).await?;
+        account.owner = Some(user.get_ref().to_owned());
 
         Ok(Response::new(account))
     }

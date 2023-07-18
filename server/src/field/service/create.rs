@@ -1,18 +1,14 @@
-use tonic::{Request, Response, Status, Code};
+use tonic::{Response, Status, Code};
 
-use super::super::super::pb::field::{UpdateFieldRequest, Field};
-use super::Handler;
+use super::super::super::pb::field::Field;
+use super::Service;
 
-impl Handler {
-    pub async fn on_update_field(
+impl Service {
+    pub async fn create(
         &self,
-        request: Request<UpdateFieldRequest>,
+        field: Field,
     ) -> Result<Response<Field>, Status> {
-        if let None = &request.get_ref().field {
-            return Err(Status::invalid_argument("Field must be provided"));
-        }
-
-        let field = self.repository.update(request.get_ref().field.to_owned().unwrap()).await;
+        let field = self.repository.create(field).await;
 
         if let Err(status) = field {
             return match &status.code() {
@@ -27,8 +23,8 @@ impl Handler {
         }
 
         let mut field = field.unwrap();
-        let account = self.accounts.get(field.account_id).await?;
-        field.account = Some(account);
+        let account = self.account_service.get(field.account_id).await?;
+        field.account = Some(account.get_ref().to_owned());
 
         Ok(Response::new(field))
     }

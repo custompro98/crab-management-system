@@ -7,7 +7,7 @@ use super::super::super::pb::user::User;
 use super::Repository;
 
 impl Repository {
-    pub async fn on_create_user(&self, user: User) -> Result<User, Status> {
+    pub async fn create(&self, user: User) -> Result<User, Status> {
         match UserRecord::from_proto(user) {
             Err(e) => Err(Status::invalid_argument(format!("{}", e))),
             Ok(input) => {

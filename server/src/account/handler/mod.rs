@@ -4,21 +4,14 @@ use tonic::{Request, Response, Status};
 use super::super::pb::account::{CreateAccountRequest, Account, GetAccountRequest, UpdateAccountRequest, DeleteAccountRequest};
 use super::super::pb::account::account_service_server::AccountService;
 
-mod create;
-mod get;
-mod update;
-mod delete;
-
 pub struct Handler {
-    repository: super::repository::Repository,
-    users: super::super::user::repository::Repository,
+    service: super::service::Service,
 }
 
 impl Handler {
     pub fn new(pool: PgPool) -> Handler {
         Handler {
-            repository: super::repository::Repository::new(pool.clone()),
-            users: super::super::user::repository::Repository::new(pool.clone()),
+            service: super::service::Service::new(pool.clone()),
         }
     }
 }
@@ -29,27 +22,27 @@ impl AccountService for Handler {
         &self,
         request: Request<CreateAccountRequest>,
     ) -> Result<Response<Account>, Status> {
-        self.on_create_account(request).await
+        self.service.create(request.get_ref().account.to_owned().expect("Account must be defined")).await
     }
 
     async fn get_account(
         &self,
         request: Request<GetAccountRequest>,
     ) -> Result<Response<Account>, Status> {
-        self.on_get_account(request).await
+        self.service.get(request.get_ref().id).await
     }
 
     async fn update_account(
         &self,
         request: Request<UpdateAccountRequest>,
     ) -> Result<Response<Account>, Status> {
-        self.on_update_account(request).await
+        self.service.update(request.get_ref().account.to_owned().expect("Account must be defined")).await
     }
 
     async fn delete_account(
         &self,
         request: Request<DeleteAccountRequest>,
     ) -> Result<Response<()>, Status> {
-        self.on_delete_account(request).await
+        self.service.delete(request.get_ref().id).await
     }
 }

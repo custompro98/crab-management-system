@@ -1,14 +1,16 @@
-use tonic::{Request, Response, Status, Code};
+use tonic::{Response, Status, Code};
 
-use super::super::super::pb::user::{GetUserRequest, User};
-use super::Handler;
+use super::Service;
 
-impl Handler {
-    pub async fn on_get_user(&self, request: Request<GetUserRequest>) -> Result<Response<User>, Status> {
-        let user = self.repository.get(request.get_ref().id).await;
+impl Service {
+    pub async fn delete(
+        &self,
+        id: i32,
+    ) -> Result<Response<()>, Status> {
+        let success = self.repository.delete(id).await;
 
-        match user {
-            Ok(user) => Ok(Response::new(user)),
+        match success {
+            Ok(_) => Ok(Response::new(())),
             Err(status) => match &status.code() {
                 Code::NotFound => Err(status),
                 Code::InvalidArgument => Err(status),
@@ -17,7 +19,7 @@ impl Handler {
                 Code::PermissionDenied => Err(status),
                 Code::Unauthenticated => Err(status),
                 _ => Err(Status::internal("An internal error occurred")),
-            },
+            }
         }
     }
 }

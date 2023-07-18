@@ -1,11 +1,14 @@
-use tonic::{Request, Response, Status, Code};
+use tonic::{Response, Status, Code};
 
-use super::super::super::pb::account::{GetAccountRequest, Account};
-use super::Handler;
+use super::super::super::pb::account::Account;
+use super::Service;
 
-impl Handler {
-    pub async fn on_get_account(&self, request: Request<GetAccountRequest>) -> Result<Response<Account>, Status> {
-        let account = self.repository.get(request.get_ref().id).await;
+impl Service {
+    pub async fn update(
+        &self,
+        account: Account,
+    ) -> Result<Response<Account>, Status> {
+        let account = self.repository.update(account).await;
 
         if let Err(status) = account {
             return match &status.code() {
@@ -20,8 +23,8 @@ impl Handler {
         }
 
         let mut account = account.unwrap();
-        let user = self.users.get(account.owner_id).await?;
-        account.owner = Some(user);
+        let user = self.user_service.get(account.owner_id).await?;
+        account.owner = Some(user.get_ref().to_owned());
 
         Ok(Response::new(account))
     }

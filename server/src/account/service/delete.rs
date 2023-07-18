@@ -1,14 +1,13 @@
-use tonic::{Request, Response, Status, Code};
+use tonic::{Response, Status, Code};
 
-use super::super::super::pb::user::DeleteUserRequest;
-use super::Handler;
+use super::Service;
 
-impl Handler {
-    pub async fn on_delete_user(
+impl Service {
+    pub async fn delete(
         &self,
-        request: Request<DeleteUserRequest>,
+        id: i32,
     ) -> Result<Response<()>, Status> {
-        let success = self.repository.delete(request.get_ref().id).await;
+        let success = self.repository.delete(id).await;
 
         match success {
             Ok(_) => Ok(Response::new(())),

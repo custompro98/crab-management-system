@@ -9,7 +9,8 @@ use super::pb::user::User;
 use super::error::ValidationError;
 
 pub mod handler;
-pub mod repository;
+mod repository;
+pub mod service;
 
 #[derive(sqlx::FromRow, validator::Validate)]
 struct AccountRecord {

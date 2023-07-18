@@ -7,7 +7,7 @@ use super::super::super::pb::user::User;
 use super::Repository;
 
 impl Repository {
-    pub async fn on_update_user(&self, user: User) -> Result<User, Status> {
+    pub async fn update(&self, user: User) -> Result<User, Status> {
         match UserRecord::from_proto(user) {
             Err(_) => Err(Status::invalid_argument("User is invalid")),
             Ok(input) => {

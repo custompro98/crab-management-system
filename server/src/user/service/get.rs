@@ -1,17 +1,14 @@
-use tonic::{Request, Response, Status, Code};
+use tonic::{Response, Status, Code};
 
-use super::super::super::pb::field::DeleteFieldRequest;
-use super::Handler;
+use super::super::super::pb::user::User;
+use super::Service;
 
-impl Handler {
-    pub async fn on_delete_field(
-        &self,
-        request: Request<DeleteFieldRequest>,
-    ) -> Result<Response<()>, Status> {
-        let success = self.repository.delete(request.get_ref().id).await;
+impl Service {
+    pub async fn get(&self, id: i32) -> Result<Response<User>, Status> {
+        let user = self.repository.get(id).await;
 
-        match success {
-            Ok(_) => Ok(Response::new(())),
+        match user {
+            Ok(user) => Ok(Response::new(user)),
             Err(status) => match &status.code() {
                 Code::NotFound => Err(status),
                 Code::InvalidArgument => Err(status),
@@ -20,7 +17,7 @@ impl Handler {
                 Code::PermissionDenied => Err(status),
                 Code::Unauthenticated => Err(status),
                 _ => Err(Status::internal("An internal error occurred")),
-            }
+            },
         }
     }
 }

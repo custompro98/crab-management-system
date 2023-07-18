@@ -1,18 +1,14 @@
-use tonic::{Request, Response, Status, Code};
+use tonic::{Response, Status, Code};
 
-use super::super::super::pb::user::{CreateUserRequest, User};
-use super::Handler;
+use super::super::super::pb::user::User;
+use super::Service;
 
-impl Handler {
-    pub async fn on_create_user(
+impl Service {
+    pub async fn create(
         &self,
-        request: Request<CreateUserRequest>,
+        user: User,
     ) -> Result<Response<User>, Status> {
-        if let None = &request.get_ref().user {
-            return Err(Status::invalid_argument("User must be provided"));
-        }
-
-        let user = self.repository.create(request.get_ref().user.to_owned().unwrap()).await;
+        let user = self.repository.create(user).await;
 
         match user {
             Ok(user) => Ok(Response::new(user)),

@@ -7,7 +7,7 @@ use super::super::super::pb::user::User;
 use super::Repository;
 
 impl Repository {
-    pub async fn on_get_user(&self, id: i32) -> Result<User, Status> {
+    pub async fn get(&self, id: i32) -> Result<User, Status> {
         let record = sqlx::query_as!(
             UserRecord,
             r#"

@@ -1,17 +1,17 @@
-use tonic::{Request, Response, Status, Code};
+use tonic::{Response, Status, Code};
 
-use super::super::super::pb::account::DeleteAccountRequest;
-use super::Handler;
+use super::super::super::pb::user::User;
+use super::Service;
 
-impl Handler {
-    pub async fn on_delete_account(
+impl Service {
+    pub async fn update(
         &self,
-        request: Request<DeleteAccountRequest>,
-    ) -> Result<Response<()>, Status> {
-        let success = self.repository.delete(request.get_ref().id).await;
+        user: User,
+    ) -> Result<Response<User>, Status> {
+        let user = self.repository.update(user).await;
 
-        match success {
-            Ok(_) => Ok(Response::new(())),
+        match user {
+            Ok(user) => Ok(Response::new(user)),
             Err(status) => match &status.code() {
                 Code::NotFound => Err(status),
                 Code::InvalidArgument => Err(status),
@@ -20,7 +20,7 @@ impl Handler {
                 Code::PermissionDenied => Err(status),
                 Code::Unauthenticated => Err(status),
                 _ => Err(Status::internal("An internal error occurred")),
-            }
+            },
         }
     }
 }

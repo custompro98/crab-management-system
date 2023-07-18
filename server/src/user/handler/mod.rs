@@ -4,19 +4,14 @@ use tonic::{Request, Response, Status};
 use super::super::pb::user::{CreateUserRequest, User, GetUserRequest, UpdateUserRequest, DeleteUserRequest};
 use super::super::pb::user::user_service_server::UserService;
 
-mod create;
-mod get;
-mod update;
-mod delete;
-
 pub struct Handler {
-    repository: super::repository::Repository,
+    service: super::service::Service,
 }
 
 impl Handler {
     pub fn new(pool: PgPool) -> Handler {
         Handler {
-            repository: super::repository::Repository::new(pool)
+            service: super::service::Service::new(pool)
         }
     }
 }
@@ -27,27 +22,26 @@ impl UserService for Handler {
         &self,
         request: Request<CreateUserRequest>,
     ) -> Result<Response<User>, Status> {
-        self.on_create_user(request).await
-    }
+        self.service.create(request.get_ref().user.to_owned().expect("User must be defined")).await }
 
     async fn get_user(
         &self,
         request: Request<GetUserRequest>,
     ) -> Result<Response<User>, Status> {
-        self.on_get_user(request).await
+        self.service.get(request.get_ref().id).await
     }
 
     async fn update_user(
         &self,
         request: Request<UpdateUserRequest>,
     ) -> Result<Response<User>, Status> {
-        self.on_update_user(request).await
+        self.service.update(request.get_ref().user.to_owned().expect("User must be defined")).await
     }
 
     async fn delete_user(
         &self,
         request: Request<DeleteUserRequest>,
     ) -> Result<Response<()>, Status> {
-        self.on_delete_user(request).await
+        self.service.delete(request.get_ref().id).await
     }
 }
