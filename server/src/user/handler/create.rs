@@ -1,9 +1,9 @@
 use tonic::{Request, Response, Status, Code};
 
 use super::super::super::pb::user::{CreateUserRequest, User};
-use super::Service;
+use super::Handler;
 
-impl Service {
+impl Handler {
     pub async fn on_create_user(
         &self,
         request: Request<CreateUserRequest>,

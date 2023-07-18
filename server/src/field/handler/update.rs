@@ -1,9 +1,9 @@
 use tonic::{Request, Response, Status, Code};
 
 use super::super::super::pb::field::{UpdateFieldRequest, Field};
-use super::Service;
+use super::Handler;
 
-impl Service {
+impl Handler {
     pub async fn on_update_field(
         &self,
         request: Request<UpdateFieldRequest>,

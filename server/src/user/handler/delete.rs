@@ -1,9 +1,9 @@
 use tonic::{Request, Response, Status, Code};
 
 use super::super::super::pb::user::DeleteUserRequest;
-use super::Service;
+use super::Handler;
 
-impl Service {
+impl Handler {
     pub async fn on_delete_user(
         &self,
         request: Request<DeleteUserRequest>,

@@ -1,9 +1,9 @@
 use tonic::{Request, Response, Status, Code};
 
 use super::super::super::pb::field::{GetFieldRequest, Field};
-use super::Service;
+use super::Handler;
 
-impl Service {
+impl Handler {
     pub async fn on_get_field(&self, request: Request<GetFieldRequest>) -> Result<Response<Field>, Status> {
         let field = self.repository.get(request.get_ref().id).await;
 

@@ -1,11 +1,11 @@
 use dotenv::dotenv;
 use tonic::transport::Server;
 
-use self::account::service::Service as AccountService;
+use self::account::handler::Handler as AccountHandler;
 use self::pb::account::account_service_server::AccountServiceServer;
-use self::field::service::Service as FieldService;
+use self::field::handler::Handler as FieldHandler;
 use self::pb::field::field_service_server::FieldServiceServer;
-use self::user::service::Service as UserService;
+use self::user::handler::Handler as UserHandler;
 use self::pb::user::user_service_server::UserServiceServer;
 
 // Utility modules
@@ -31,9 +31,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Server::builder()
         // GrpcWeb is over http1 so we must enable it.
         .accept_http1(true)
-        .add_service(tonic_web::enable(AccountServiceServer::new(AccountService::new(pool.clone()))))
-        .add_service(tonic_web::enable(FieldServiceServer::new(FieldService::new(pool.clone()))))
-        .add_service(tonic_web::enable(UserServiceServer::new(UserService::new(pool.clone()))))
+        .add_service(tonic_web::enable(AccountServiceServer::new(AccountHandler::new(pool.clone()))))
+        .add_service(tonic_web::enable(FieldServiceServer::new(FieldHandler::new(pool.clone()))))
+        .add_service(tonic_web::enable(UserServiceServer::new(UserHandler::new(pool.clone()))))
         .serve(addr)
         .await?;
 

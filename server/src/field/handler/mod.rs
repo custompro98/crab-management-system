@@ -9,14 +9,14 @@ mod get;
 mod update;
 mod delete;
 
-pub struct Service {
+pub struct Handler {
     repository: super::repository::Repository,
     accounts: super::super::account::repository::Repository,
 }
 
-impl Service {
-    pub fn new(pool: PgPool) -> Service {
-        Service {
+impl Handler {
+    pub fn new(pool: PgPool) -> Handler {
+        Handler {
             repository: super::repository::Repository::new(pool.clone()),
             accounts: super::super::account::repository::Repository::new(pool.clone())
         }
@@ -24,7 +24,7 @@ impl Service {
 }
 
 #[tonic::async_trait]
-impl FieldService for Service {
+impl FieldService for Handler {
     async fn create_field(
         &self,
         request: Request<CreateFieldRequest>,

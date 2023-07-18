@@ -9,14 +9,14 @@ mod get;
 mod update;
 mod delete;
 
-pub struct Service {
+pub struct Handler {
     repository: super::repository::Repository,
     users: super::super::user::repository::Repository,
 }
 
-impl Service {
-    pub fn new(pool: PgPool) -> Service {
-        Service {
+impl Handler {
+    pub fn new(pool: PgPool) -> Handler {
+        Handler {
             repository: super::repository::Repository::new(pool.clone()),
             users: super::super::user::repository::Repository::new(pool.clone()),
         }
@@ -24,7 +24,7 @@ impl Service {
 }
 
 #[tonic::async_trait]
-impl AccountService for Service {
+impl AccountService for Handler {
     async fn create_account(
         &self,
         request: Request<CreateAccountRequest>,

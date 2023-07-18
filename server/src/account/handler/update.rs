@@ -1,18 +1,18 @@
 use tonic::{Request, Response, Status, Code};
 
-use super::super::super::pb::account::{CreateAccountRequest, Account};
-use super::Service;
+use super::super::super::pb::account::{UpdateAccountRequest, Account};
+use super::Handler;
 
-impl Service {
-    pub async fn on_create_account(
+impl Handler {
+    pub async fn on_update_account(
         &self,
-        request: Request<CreateAccountRequest>,
+        request: Request<UpdateAccountRequest>,
     ) -> Result<Response<Account>, Status> {
         if let None = &request.get_ref().account {
             return Err(Status::invalid_argument("Account must be provided"));
         }
 
-        let account = self.repository.create(request.get_ref().account.to_owned().unwrap()).await;
+        let account = self.repository.update(request.get_ref().account.to_owned().unwrap()).await;
 
         if let Err(status) = account {
             return match &status.code() {

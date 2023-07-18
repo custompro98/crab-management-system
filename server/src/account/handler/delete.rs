@@ -1,12 +1,12 @@
 use tonic::{Request, Response, Status, Code};
 
-use super::super::super::pb::field::DeleteFieldRequest;
-use super::Service;
+use super::super::super::pb::account::DeleteAccountRequest;
+use super::Handler;
 
-impl Service {
-    pub async fn on_delete_field(
+impl Handler {
+    pub async fn on_delete_account(
         &self,
-        request: Request<DeleteFieldRequest>,
+        request: Request<DeleteAccountRequest>,
     ) -> Result<Response<()>, Status> {
         let success = self.repository.delete(request.get_ref().id).await;
 

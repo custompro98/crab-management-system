@@ -1,9 +1,9 @@
 use tonic::{Request, Response, Status, Code};
 
 use super::super::super::pb::account::{GetAccountRequest, Account};
-use super::Service;
+use super::Handler;
 
-impl Service {
+impl Handler {
     pub async fn on_get_account(&self, request: Request<GetAccountRequest>) -> Result<Response<Account>, Status> {
         let account = self.repository.get(request.get_ref().id).await;
 
