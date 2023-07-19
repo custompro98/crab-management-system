@@ -49,7 +49,6 @@ impl Service {
         }
 
         let mut maybe_accounts: Vec<MaybeAccount> = Vec::new();
-
         for account_id in account_ids {
             match accounts_by_id.get_mut(&account_id) {
                 Some(account) => {
