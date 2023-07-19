@@ -7,7 +7,7 @@ use super::super::super::pb::account::Account;
 use super::Repository;
 
 impl Repository {
-    pub async fn on_update_account(&self, account: Account) -> Result<Account, Status> {
+    pub async fn update(&self, account: Account) -> Result<Account, Status> {
         match AccountRecord::from_proto(account) {
             Err(_) => Err(Status::invalid_argument("Account is invalid")),
             Ok(input) => {

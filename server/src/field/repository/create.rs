@@ -7,7 +7,7 @@ use super::super::super::pb::field::Field;
 use super::Repository;
 
 impl Repository {
-    pub async fn on_create_field(&self, field: Field) -> Result<Field, Status> {
+    pub async fn create(&self, field: Field) -> Result<Field, Status> {
         match FieldRecord::from_proto(field) {
             Err(e) => Err(Status::invalid_argument(format!("{}", e))),
             Ok(input) => {

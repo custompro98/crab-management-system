@@ -7,7 +7,7 @@ use super::super::super::pb::field::Field;
 use super::Repository;
 
 impl Repository {
-    pub async fn on_update_field(&self, field: Field) -> Result<Field, Status> {
+    pub async fn update(&self, field: Field) -> Result<Field, Status> {
         match FieldRecord::from_proto(field) {
             Err(_) => Err(Status::invalid_argument("Field is invalid")),
             Ok(input) => {

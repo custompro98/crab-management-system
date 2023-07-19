@@ -3,7 +3,7 @@ use tonic::Status;
 use super::Repository;
 
 impl Repository {
-    pub async fn on_delete_account(&self, id: i32) -> Result<(), Status> {
+    pub async fn delete(&self, id: i32) -> Result<(), Status> {
         let rows_updated = sqlx::query!(
             r#"
               UPDATE accounts

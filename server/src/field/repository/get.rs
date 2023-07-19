@@ -7,7 +7,7 @@ use super::super::super::pb::field::Field;
 use super::Repository;
 
 impl Repository {
-    pub async fn on_get_field(&self, id: i32) -> Result<Field, Status> {
+    pub async fn get(&self, id: i32) -> Result<Field, Status> {
         let record = sqlx::query_as!(
             FieldRecord,
             r#"

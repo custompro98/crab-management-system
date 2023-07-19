@@ -7,7 +7,7 @@ use super::super::super::pb::account::Account;
 use super::Repository;
 
 impl Repository {
-    pub async fn on_create_account(&self, account: Account) -> Result<Account, Status> {
+    pub async fn create(&self, account: Account) -> Result<Account, Status> {
         match AccountRecord::from_proto(account) {
             Err(e) => Err(Status::invalid_argument(format!("{}", e))),
             Ok(input) => {
