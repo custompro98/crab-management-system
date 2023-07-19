@@ -36,10 +36,6 @@ struct FieldRecord {
     account_id: i32,
     name: String,
     value: Option<String>,
-    #[validate(custom(
-        function = "validate_field_type_specified",
-        message = "Field type must be specified"
-    ))]
     field_type: FieldType,
     created_at: DateTime<Utc>,
     updated_at: Option<DateTime<Utc>>,
@@ -172,12 +168,5 @@ impl FieldType {
             FieldTypePb::Text => FieldType::Text,
             FieldTypePb::Number => FieldType::Number,
         }
-    }
-}
-
-fn validate_field_type_specified(value: &FieldType) -> Result<(), validator::ValidationError> {
-    match value {
-        FieldType::Unspecified => Err(validator::ValidationError::new("invalid_field_type")),
-        _ => Ok(()),
     }
 }
