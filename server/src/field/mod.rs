@@ -19,6 +19,7 @@ enum FieldType {
     #[default]
     Unspecified,
     Text,
+    Number,
 }
 
 #[derive(Default)]
@@ -26,6 +27,7 @@ enum FieldValue {
     #[default]
     Empty,
     Text(String),
+    Number(i32),
 }
 
 #[derive(sqlx::FromRow, validator::Validate, Default)]
@@ -78,20 +80,33 @@ impl FieldRecord {
 
         // Only allow valid combinations of FieldType and Option<Value>
         let field_value = match (&proto.r#type(), &proto.optional_value) {
-            (FieldTypePb::Unspecified, _) => FieldValue::Empty,
-            (_, None) => FieldValue::Empty,
+            (FieldTypePb::Unspecified, _) => Err(ValidationError::FailedPrecondition(
+                "field type must be specified".into(),
+            )),
+            (_, None) => Ok(FieldValue::Empty),
             (FieldTypePb::Text, Some(OptionalValue::Value(value))) => {
-                FieldValue::Text(value.clone())
+                Ok(FieldValue::Text(value.clone()))
+            }
+            (FieldTypePb::Number, Some(OptionalValue::Value(value))) => {
+                match value.parse::<i32>() {
+                    Ok(value_as_i32) => Ok(FieldValue::Number(value_as_i32)),
+                    Err(e) => Err(ValidationError::FailedPrecondition(e.to_string())),
+                }
             }
         };
+
+        if let Err(e) = field_value {
+            return Err(e);
+        }
 
         let record = FieldRecord {
             id: proto.id,
             account_id: proto.account_id,
             name: proto.name.clone(),
-            value: match field_value {
+            value: match field_value.unwrap() {
                 FieldValue::Empty => None,
                 FieldValue::Text(value) => Some(value),
+                FieldValue::Number(value) => Some(value.to_string()),
             },
             field_type: FieldType::from_proto(proto.r#type()),
             created_at,
@@ -121,6 +136,7 @@ impl std::string::ToString for FieldType {
         match self {
             FieldType::Unspecified => String::from("unspecified"),
             FieldType::Text => String::from("text"),
+            FieldType::Number => String::from("number"),
         }
     }
 }
@@ -146,6 +162,7 @@ impl FieldType {
         match self {
             FieldType::Text => FieldTypePb::Text,
             FieldType::Unspecified => FieldTypePb::Unspecified,
+            FieldType::Number => FieldTypePb::Number,
         }
     }
 
@@ -153,6 +170,7 @@ impl FieldType {
         match proto {
             FieldTypePb::Unspecified => FieldType::Unspecified,
             FieldTypePb::Text => FieldType::Text,
+            FieldTypePb::Number => FieldType::Number,
         }
     }
 }

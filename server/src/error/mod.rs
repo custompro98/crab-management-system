@@ -4,6 +4,7 @@ use std::fmt::Display;
 pub enum ValidationError {
     TimeParseError(chrono::ParseError),
     ValidatorError(validator::ValidationErrors),
+    FailedPrecondition(String),
 }
 
 impl Display for ValidationError {
@@ -11,6 +12,7 @@ impl Display for ValidationError {
         match self {
             ValidationError::TimeParseError(e) => write!(f, "{}", e),
             ValidationError::ValidatorError(e) => write!(f, "{}", e),
+            ValidationError::FailedPrecondition(e) => write!(f, "{}", e),
         }
     }
 }

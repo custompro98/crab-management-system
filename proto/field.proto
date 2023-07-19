@@ -9,6 +9,7 @@ message Field {
   enum Type {
     TYPE_UNSPECIFIED = 0;
     TYPE_TEXT = 1;
+    TYPE_NUMBER = 2;
   }
 
   int32 id = 1;
@@ -74,7 +75,6 @@ message BatchGetFieldsResponse {
 
   repeated MaybeField fields = 1;
 }
-
 
 message UpdateFieldRequest {
   Field field = 1;
