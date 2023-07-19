@@ -34,7 +34,9 @@ message Field {
 
 service FieldService {
   rpc CreateField (CreateFieldRequest) returns (Field);
+  rpc ListFields (ListFieldsRequest) returns (ListFieldsResponse);
   rpc GetField (GetFieldRequest) returns (Field);
+  rpc BatchGetFields (BatchGetFieldsRequest) returns (BatchGetFieldsResponse);
   rpc UpdateField (UpdateFieldRequest) returns (Field);
   rpc DeleteField (DeleteFieldRequest) returns (google.protobuf.Empty);
 }
@@ -43,9 +45,36 @@ message CreateFieldRequest {
   Field field = 1;
 }
 
+message ListFieldsRequest {
+  message Filter {
+    int32 account_id = 1;
+  }
+
+  Filter filter = 1;
+}
+
+message ListFieldsResponse {
+  repeated Field fields = 1;
+}
+
 message GetFieldRequest {
   int32 id = 1;
 }
+
+message BatchGetFieldsRequest {
+  repeated int32 field_ids = 1;
+}
+
+message BatchGetFieldsResponse {
+  message MaybeField {
+    oneof optional_field {
+      Field field = 1;
+    }
+  }
+
+  repeated MaybeField fields = 1;
+}
+
 
 message UpdateFieldRequest {
   Field field = 1;

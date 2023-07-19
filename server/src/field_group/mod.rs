@@ -29,7 +29,7 @@ impl FieldGroupRecord {
             account_id: self.account_id,
             name: self.name,
             account: None,
-            fields: vec![],
+            fields: Vec::new(),
 
             created_at: self.created_at.to_rfc3339(),
             optional_updated_at: match self.updated_at {
