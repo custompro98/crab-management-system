@@ -1,7 +1,8 @@
 syntax = "proto3";
 
-package fieldgroup;
+package field_group;
 
+import "account.proto";
 import "field.proto";
 import "google/protobuf/empty.proto";
 
@@ -11,6 +12,8 @@ message FieldGroup {
   string name = 3;
 
   repeated field.Field fields = 4;
+
+  account.Account account = 5;
 
   string created_at = 50;
 

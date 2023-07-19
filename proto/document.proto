@@ -3,7 +3,7 @@ syntax = "proto3";
 package document;
 
 import "field.proto";
-import "fieldgroup.proto";
+import "field_group.proto";
 import "google/protobuf/empty.proto";
 
 message Document {
@@ -12,7 +12,7 @@ message Document {
   string name = 3;
 
   int32 field_group_id = 4;
-  fieldgroup.FieldGroup field_group = 5;
+  field_group.FieldGroup field_group = 5;
 
   repeated field.Field document_fields = 6;
 

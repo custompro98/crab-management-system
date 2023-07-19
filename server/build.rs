@@ -9,7 +9,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "../proto/collection.proto",
                 "../proto/document.proto",
                 "../proto/field.proto",
-                "../proto/fieldgroup.proto",
+                "../proto/field_group.proto",
                 "../proto/user.proto",
             ],
             &["../proto"],
