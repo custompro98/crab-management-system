@@ -27,6 +27,8 @@ message Account {
 service AccountService {
   rpc CreateAccount (CreateAccountRequest) returns (Account);
   rpc GetAccount (GetAccountRequest) returns (Account);
+  rpc BatchGetAccounts (BatchGetAccountsRequest)
+     returns (BatchGetAccountsResponse);
   rpc UpdateAccount (UpdateAccountRequest) returns (Account);
   rpc DeleteAccount (DeleteAccountRequest) returns (google.protobuf.Empty);
 }
@@ -37,6 +39,20 @@ message CreateAccountRequest {
 
 message GetAccountRequest {
   int32 id = 1;
+}
+
+message BatchGetAccountsRequest {
+  repeated int32 account_ids = 1;
+}
+
+message BatchGetAccountsResponse {
+  message MaybeAccount {
+    oneof optional_account {
+      Account account = 1;
+    }
+  }
+
+  repeated MaybeAccount accounts = 1;
 }
 
 message UpdateAccountRequest {

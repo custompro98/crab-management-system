@@ -2,6 +2,7 @@ use sqlx::PgPool;
 
 mod create;
 mod get;
+mod batch_get;
 mod update;
 mod delete;
 

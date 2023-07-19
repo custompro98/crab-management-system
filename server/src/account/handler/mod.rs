@@ -1,7 +1,15 @@
 use sqlx::PgPool;
 use tonic::{Request, Response, Status};
 
-use super::super::pb::account::{CreateAccountRequest, Account, GetAccountRequest, UpdateAccountRequest, DeleteAccountRequest};
+use super::super::pb::account::{
+    BatchGetAccountsRequest,
+    BatchGetAccountsResponse,
+    CreateAccountRequest,
+    Account,
+    GetAccountRequest,
+    UpdateAccountRequest,
+    DeleteAccountRequest};
+
 use super::super::pb::account::account_service_server::AccountService;
 
 pub struct Handler {
@@ -30,6 +38,13 @@ impl AccountService for Handler {
         request: Request<GetAccountRequest>,
     ) -> Result<Response<Account>, Status> {
         self.service.get(request.get_ref().id).await
+    }
+
+    async fn batch_get_accounts(
+        &self,
+        request: Request<BatchGetAccountsRequest>,
+    ) -> Result<Response<BatchGetAccountsResponse>, Status> {
+        self.service.batch_get(&request.get_ref().account_ids).await
     }
 
     async fn update_account(
