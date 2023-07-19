@@ -27,6 +27,7 @@ message User {
 service UserService {
   rpc CreateUser (CreateUserRequest) returns (User);
   rpc GetUser (GetUserRequest) returns (User);
+  rpc BatchGetUsers (BatchGetUsersRequest) returns (BatchGetUsersResponse);
   rpc UpdateUser (UpdateUserRequest) returns (User);
   rpc DeleteUser (DeleteUserRequest) returns (google.protobuf.Empty);
 }
@@ -37,6 +38,20 @@ message CreateUserRequest {
 
 message GetUserRequest {
   int32 id = 1;
+}
+
+message BatchGetUsersRequest {
+  repeated int32 user_ids = 1;
+}
+
+message BatchGetUsersResponse {
+  message MaybeUser {
+    oneof optional_user {
+      User user = 1;
+    }
+  }
+
+  repeated MaybeUser users = 1;
 }
 
 message UpdateUserRequest {

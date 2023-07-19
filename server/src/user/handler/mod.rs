@@ -1,7 +1,8 @@
 use sqlx::PgPool;
 use tonic::{Request, Response, Status};
 
-use super::super::pb::user::{CreateUserRequest, User, GetUserRequest, UpdateUserRequest, DeleteUserRequest};
+use super::super::pb::user::{BatchGetUsersRequest, BatchGetUsersResponse, CreateUserRequest, User, GetUserRequest, UpdateUserRequest, DeleteUserRequest};
+
 use super::super::pb::user::user_service_server::UserService;
 
 pub struct Handler {
@@ -29,6 +30,13 @@ impl UserService for Handler {
         request: Request<GetUserRequest>,
     ) -> Result<Response<User>, Status> {
         self.service.get(request.get_ref().id).await
+    }
+
+    async fn batch_get_users(
+        &self,
+        request: Request<BatchGetUsersRequest>,
+    ) -> Result<Response<BatchGetUsersResponse>, Status> {
+        self.service.batch_get(&request.get_ref().user_ids).await
     }
 
     async fn update_user(
