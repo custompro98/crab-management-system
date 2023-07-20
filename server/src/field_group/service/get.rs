@@ -23,8 +23,6 @@ impl Service {
         let account = self.account_service.get(field_group.account_id).await?;
         field_group.account = Some(account.get_ref().to_owned());
 
-        // TODO: include the fields in a field group and apply to all other methods
-
         Ok(Response::new(field_group))
     }
 }
